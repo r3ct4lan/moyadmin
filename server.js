@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 const server = require('http').Server(app);
 const url = require('url');
 const fs = require('fs');
+const randomstring = require("randomstring");
 var formidable = require('formidable');
 var ftpClient = require('ftp');
 const ftp_config = require('./config/ftp.js');
@@ -156,7 +157,7 @@ app.post('/', (req, res) => {
 			result = JSON.parse(result);
 			for (var i = 0; i<result.users.length; i++) {
 				if (result.users[i].login == username && result.users[i].password == password) {
-					var newId = createID(req.headers.cookie);
+					var newId = randomstring.generate(23);
 					var page = fs.readFileSync('public/homepage.html');
 					res.cookie("moydvgups_admin_id", newId);
 					res.cookie("username", username);
@@ -218,18 +219,4 @@ function checkUser (request, callback) {
 			console.log("Redis error: " + err);
 		}
 	});
-}
-
-function createID(string) {
-	while (string.length > 13) {
-		var randNum = Math.random() * string.length;
-		string = string.slice(0,randNum) + string.slice(randNum+1);
-	}
-	var newStr= "";
-	var dateStr = Date.now().toString();
-	for (var i = 0; i<string.length; i++) {
-		newStr += String.fromCharCode(string.charCodeAt(i)+parseInt(dateStr[dateStr.length-1]));
-	}
-	string = newStr.replace(/[^A-Za-z0-9\s]/g, dateStr[parseInt(Math.random()*dateStr.length)]).replace(/\s/g, dateStr[parseInt(Math.random()*dateStr.length)]);
-	return string;
 }
