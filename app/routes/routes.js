@@ -139,9 +139,10 @@ module.exports = function (server, db) {
 		});
 
 		socket.on("getChat", userId => {
+			console.log("getChat");
 			checkUserId(userId, temp => {
 				if (temp) {
-					console.log("getChat");
+					console.log("tempIsTrue");
 					db.get("chat", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
@@ -290,67 +291,67 @@ module.exports = function (server, db) {
 							console.log("Redis error: " + err);
 						}
 					});
-}
-});
-});
-
-socket.on("deleteArticle", (article, userId) => {
-	checkUserId(userId, temp => {
-		if (temp) {
-			db.del(article);
-			var ftp = new ftpClient();
-			ftp.connect(ftp_config);
-			ftp.on('ready', () => {
-				ftp.delete('./moydvgups.ru/www/'+article+'.html', err => {
-					if (err) console.log(err);
-					ftp.end();
-				});
+				}
 			});
-		}
-	});
-});
+		});
 
-socket.on("getArticle", (article, userId) => {
-	checkUserId(userId, temp => {
-		if (temp) {
-			db.get(article, (err, struct) => {
-				if (struct) {
-					db.get("menu_structure", (err, menu) => {
-						db.get("colors", (err, color) => {
-							if (menu && color) {
-								menu = JSON.parse(menu);
-								struct = JSON.parse(struct);
-								color = JSON.parse(color);
-								socket.emit("setArticle", struct, menu, color, userId);
-							} else {
-								console.log("Redis error: " + err);
-							}
+		socket.on("deleteArticle", (article, userId) => {
+			checkUserId(userId, temp => {
+				if (temp) {
+					db.del(article);
+					var ftp = new ftpClient();
+					ftp.connect(ftp_config);
+					ftp.on('ready', () => {
+						ftp.delete('./moydvgups.ru/www/'+article+'.html', err => {
+							if (err) console.log(err);
+							ftp.end();
 						});
 					});
-				} else {
-					socket.emit("setArticle", null, null, null, userId);
 				}
 			});
-		}
-	});
-});
-});
+		});
 
-function checkUserId(userId, callback) {
-	var temp = false;
-	db.get("active_id", function(err, result) {
-		if (result) {
-			result = JSON.parse(result);
-			for (var j = 0; j<result.active_id.length; j++) {
-				if (result.active_id[j].id == userId) {
-					temp = true;
-					break;
+		socket.on("getArticle", (article, userId) => {
+			checkUserId(userId, temp => {
+				if (temp) {
+					db.get(article, (err, struct) => {
+						if (struct) {
+							db.get("menu_structure", (err, menu) => {
+								db.get("colors", (err, color) => {
+									if (menu && color) {
+										menu = JSON.parse(menu);
+										struct = JSON.parse(struct);
+										color = JSON.parse(color);
+										socket.emit("setArticle", struct, menu, color, userId);
+									} else {
+										console.log("Redis error: " + err);
+									}
+								});
+							});
+						} else {
+							socket.emit("setArticle", null, null, null, userId);
+						}
+					});
 				}
-			}
-			callback(temp);
-		} else {
-			console.log("Redis error: " + err);
-		}
+			});
+		});
 	});
-}
+
+	function checkUserId(userId, callback) {
+		var temp = false;
+		db.get("active_id", function(err, result) {
+			if (result) {
+				result = JSON.parse(result);
+				for (var j = 0; j<result.active_id.length; j++) {
+					if (result.active_id[j].id == userId) {
+						temp = true;
+						break;
+					}
+				}
+				callback(temp);
+			} else {
+				console.log("Redis error: " + err);
+			}
+		});
+	}
 };
