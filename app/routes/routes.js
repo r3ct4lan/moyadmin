@@ -3,8 +3,10 @@ const fs = require('fs');
 const ftp_config = require('../../config/ftp.js');
 
 module.exports = function (server, db) {
+	console.log("getChat1");
 	const io = require('socket.io')(server);
 	io.on('connection', socket => {
+		console.log("getChat2");
 		socket.on("userExit", userId => {
 			db.get("active_id", (err, result) => {
 				if (result) {
