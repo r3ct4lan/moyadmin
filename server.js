@@ -192,7 +192,6 @@ app.post('/', (req, res) => {
 });
 
 function checkUser (request, callback) {
-	console.log(request.headers);
 	var rc = request.cookies['moydvgups_admin_id'];
 	client.get("active_id", function(err, result) {
 		if (result) {
