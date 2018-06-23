@@ -190,6 +190,7 @@ app.post('/', (req, res) => {
 });
 
 function checkUser (request, callback) {
+	console.log(request);
 	var rc = request.headers.cookie;
 	rc = rc.substr(rc.indexOf('moydvgups_admin_id='));
 	rc = rc.substr(19, rc.indexOf('; '));
