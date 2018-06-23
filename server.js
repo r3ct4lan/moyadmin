@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 const app = express();
 const server = require('http').Server(app);
 const url = require('url');
@@ -9,6 +10,7 @@ var ftpClient = require('ftp');
 const ftp_config = require('./config/ftp.js');
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
 
 if (process.env.REDIS_URL) {
@@ -191,10 +193,7 @@ app.post('/', (req, res) => {
 
 function checkUser (request, callback) {
 	console.log(request.headers);
-	var rc = request.headers.cookie;
-	rc = rc.substr(rc.indexOf('moydvgups_admin_id='));
-	rc = rc.substr(19, rc.indexOf('; '));
-	rc = rc.substr(0, rc.indexOf('; '));
+	var rc = request.cookies['moydvgups_admin_id'];
 	client.get("active_id", function(err, result) {
 		if (result) {
 			result = JSON.parse(result);
