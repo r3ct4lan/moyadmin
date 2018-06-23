@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	const socket = io.connect('http://localhost:8000');
+	const socket = io.connect('https://moyadmin.herokuapp.com');
 
 	function get_cookie ( cookie_name ) {	//получение значения cookie
 	  var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );

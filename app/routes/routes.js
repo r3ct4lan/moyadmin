@@ -3,10 +3,8 @@ const fs = require('fs');
 const ftp_config = require('../../config/ftp.js');
 
 module.exports = function (server, db) {
-	console.log("getChat1");
 	const io = require('socket.io')(server);
 	io.on('connection', socket => {
-		console.log("getChat2");
 		socket.on("userExit", userId => {
 			db.get("active_id", (err, result) => {
 				if (result) {
@@ -141,10 +139,8 @@ module.exports = function (server, db) {
 		});
 
 		socket.on("getChat", userId => {
-			console.log("getChat");
 			checkUserId(userId, temp => {
 				if (temp) {
-					console.log("tempIsTrue");
 					db.get("chat", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);

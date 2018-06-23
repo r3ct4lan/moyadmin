@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	const socket = io.connect('http://localhost:8000');
+	const socket = io.connect('https://moyadmin.herokuapp.com');
 
 	function get_cookie ( cookie_name ) {	//получение значения cookie
 		var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
@@ -32,7 +32,6 @@ $(document).ready(function() {
 	
 	socket.emit("getChat", idCookie);
 	socket.on("setChat", (chat) => {
-		console.log("setting_chat");
 		$('.panel').remove();
 		$('#chat_window').append('<div class="panel panel-default"><div class="panel-footer"><div class="form-inline"><textarea type="text" class="form-control" id="chat_textarea" placeholder="Ваше сообщение..."></textarea><button class="btn btn-primary" id="chat_send_btn">Отправить</button></div><div class="msg_container_base"><ul class="list-group" id="chat_messages"></ul></div></div></div>')
 		for (var i = chat.messages.length-1; i >= 0; i--) {
