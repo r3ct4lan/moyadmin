@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>Titles</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel='stylesheet' href='css/dropzone.css'>
+	<link rel='stylesheet' href='css/style.css'>
+	<link rel='stylesheet' href='css/article.css'>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  <script src="js/socket.io.js"></script>
+  <script src="js/socket_script.js"></script>
+  <script src="js/dropzone.js"></script>
+  <script src="js/titles_script.js"></script>
+</head>
+<body>
+  <main class="mainContainer">
+   <div class='container'>
+    <div class='row'>
+      <section>
+       <div class='col-md-12' id="article_edit">
+       </div>
+     </section>
+   </div>
+ </main>
+
+ <div class="modal fade" id="article-icon" tabindex="-1" role="dialog" aria-labelledby="article-icon" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="article-icon">Выбрать иконку</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+       <div class="col-md-12">
+         <form action="/icon-upload" class="dropzone" id="change-icon-dropzone">
+          <div class="dz-message needsclick">Перенесите сюда файл или нажмите для загрузки</div>
+        </form>
+        <button type="button" class="btn btn-success" id="open-file-manager" data-toggle="modal" data-target="#sec_file_manager">Выбрать из загруженных</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+      <button type="button" class="btn btn-primary">Сохранить</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="article-backgr" tabindex="-1" role="dialog" aria-labelledby="article-backgr" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="article-backgr">Выбрать фоновое изображение</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-md-12">
+          <form action="/backgr-upload" class="dropzone" id="change-backgr-dropzone">
+            <div class="dz-message needsclick">Перенесите сюда файл или нажмите для загрузки</div>
+          </form>
+          <button type="button" class="btn btn-success" id="open-file-manager" data-toggle="modal" data-target="#sec_file_manager">Выбрать из загруженных</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sec_file_manager" tabindex="-1" role="dialog" aria-labelledby="sec_file_manager" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sec_file_manager">Диспетчер файлов</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-md-12" id="file-manager">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>

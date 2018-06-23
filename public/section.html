@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Section</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel='stylesheet' href='css/bootstrap-colorselector.css'>
+	<link rel='stylesheet' href='css/bootstrap-colorpicker.min.css'>
+	<link rel='stylesheet' href='css/dropzone.css'>
+	<link rel='stylesheet' href='css/style.css'>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+	<script src="js/socket.io.js"></script>
+	<script src="js/socket_script.js"></script>
+	<script src="js/bootstrap-colorselector.js"></script>
+	<script src="js/bootstrap-colorpicker.min.js"></script>
+	<script src="js/dropzone.js"></script>
+	<script src="js/section_script.js"></script>
+</head>
+<body>
+  <main class="mainContainer">
+   <div class='container'>
+    <div class='row'>
+     <div class='col-md-12'>
+      <h1 id="section_name"></h1>
+      <p>Внешний вид:</p>
+      <div class="section_view row">
+      </div>
+      <div class="btn-group" role="group">
+       <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Изменить раздел</button>
+       <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+        <li><a class="dropdown-item" data-toggle="modal" data-target="#ch_sec_title">Наименование</a></li>
+        <li><a class="dropdown-item" data-toggle="modal" data-target="#ch_sec_color">Цвет</a></li>
+        <li><a class="dropdown-item" data-toggle="modal" data-target="#ch_sec_size">Размер</a></li>
+        <li><a class="dropdown-item" data-toggle="modal" data-target="#ch_sec_icon">Иконка</a></li>
+        <li><a class="dropdown-item" data-toggle="modal" data-target="#ch_sec_backgr">Фоновое изображение</a></li>
+        <li><a class="dropdown-item" data-toggle="modal" data-target="#ch_sec_content">Содержимое</a></li>
+      </div>
+    </div>
+  </main>
+
+<div class="modal fade" id="ch_sec_title" tabindex="-1" role="dialog" aria-labelledby="ch_sec_title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ch_sec_title">Изменить наименование</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" id="ch_sec_title-text"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ch_sec_color" tabindex="-1" role="dialog" aria-labelledby="ch_sec_color" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ch_sec_color">Изменить цвет</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <select id="colorselector">
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="add_new_color" tabindex="-1" role="dialog" aria-labelledby="add_new_color" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="add_new_color">Добавить новый цвет</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <label>Цвет иконки:</label>
+       <div id="colorP1" class="input-group colorpicker-component">
+        <input type="text" class="form-control" />
+        <span class="input-group-addon"><i></i></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <label>Цвет фона:</label>
+      <div id="colorP2" class="input-group colorpicker-component">
+        <input type="text" value="rgba(0,170,187,0.61)" class="form-control" />
+        <span class="input-group-addon"><i></i></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <label>Цвет заголовков:</label>
+      <div id="colorP3" class="input-group colorpicker-component">
+        <input type="text" class="form-control" />
+        <span class="input-group-addon"><i></i></span>
+      </div>
+    </div>
+    <div class="modal-body">
+     <label>Пример:</label>
+     <div class="row section_view example_view">
+      <div class="col-xs-12"><h2 id="article_title">ЗАГОЛОВОК СТАТЬИ</h2></div>
+      <div class="col-xs-12"><hr></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+    <button type="button" class="btn btn-primary">Сохранить</button>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="ch_sec_size" tabindex="-1" role="dialog" aria-labelledby="ch_sec_size" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ch_sec_size">Изменить размер</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="btn-group btn-group-toggle" id="size-buttons" data-toggle="buttons">
+          <label class="btn btn-secondary">
+            <input type="radio" name="options" id="5" autocomplete="off">5 | 7
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="options" id="6" autocomplete="off">6 | 6
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="options" id="7" autocomplete="off">7 | 5
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="options" id="12" autocomplete="off">12
+          </label>
+        </div>
+        <div class="container-fluid">
+         <div class="row change_size"></div>
+       </div>
+     </div>
+     <div class="alert alert-warning" role="alert">
+      <b>Внимание:</b> размер двух соседних разделов на главной странице должен составлять 12 в сумме.
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+      <button type="button" class="btn btn-primary">Сохранить</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="ch_sec_icon" tabindex="-1" role="dialog" aria-labelledby="ch_sec_icon" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ch_sec_icon">Изменить иконку</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+      	<div class="col-md-6" style="border-right: 1px solid #e9ecef;">
+          <h6>Текущее изображение:</h6>
+          <div class="change_icon" id='current_img'></div>
+        </div>
+        <div class="col-md-6">
+        	<form action="/icon-upload" class="dropzone" id="change-icon-dropzone">
+        		<div class="dz-message needsclick">Перенесите сюда файл или нажмите для загрузки</div>
+        	</form>
+        	<button type="button" class="btn btn-success" id="open-file-manager" data-toggle="modal" data-target="#sec_file_manager">Выбрать из загруженных</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ch_sec_backgr" tabindex="-1" role="dialog" aria-labelledby="ch_sec_backgr" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ch_sec_backgr">Изменить фоновое изображение</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-md-6" style="border-right: 1px solid #e9ecef;">
+          <h6>Текущее изображение:</h6>
+          <div class="change_backgr" id='current_img'></div>
+        </div>
+        <div class="col-md-6">
+          <form action="/backgr-upload" class="dropzone" id="change-backgr-dropzone">
+            <div class="dz-message needsclick">Перенесите сюда файл или нажмите для загрузки</div>
+          </form>
+          <button type="button" class="btn btn-success" id="open-file-manager" data-toggle="modal" data-target="#sec_file_manager">Выбрать из загруженных</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sec_file_manager" tabindex="-1" role="dialog" aria-labelledby="sec_file_manager" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sec_file_manager">Диспетчер файлов</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-md-12" id="file-manager">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ch_sec_content" tabindex="-1" role="dialog" aria-labelledby="ch_sec_content" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ch_sec_content">Изменить содержимое</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="content_list"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>

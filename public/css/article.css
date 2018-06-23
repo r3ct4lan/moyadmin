@@ -1,0 +1,26 @@
+.preview-image-icon, .preview-image-backgr {
+	margin: 10px 0;
+	padding: 5px;
+	background-color: #ddd;
+	width: fit-content;
+	max-width: 100%;
+}
+
+.preview-image-icon > img {
+	max-height: 300px;
+	max-width: 100%;
+}
+
+#current_img {
+	background-color: #ddd;
+}
+
+.preview-image-backgr > img {
+	max-height: 700px;
+	max-width: 100%;
+}
+
+.form-footer {
+	display: flex;
+	justify-content: flex-end;
+}

@@ -1,0 +1,42 @@
+{
+  "name": "moyadmin",
+  "version": "1.0.0",
+  "description": "my deep_lom",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MRectalanal/deep_lom.git"
+  },
+  "keywords": [
+    "admin",
+    "cms",
+    "moyadmin",
+    "panel",
+    "diploma"
+  ],
+  "author": "Maxim Smolkov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MRectalanal/deep_lom/issues"
+  },
+  "homepage": "https://github.com/MRectalanal/deep_lom#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "formidable": "^1.2.1",
+    "fs": "0.0.1-security",
+    "ftp": "^0.3.10",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "redis": "^2.8.0",
+    "socket.io": "^2.1.0",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}
