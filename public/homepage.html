@@ -25,7 +25,17 @@
 				<div class='col-md-5'>
 					<h3>Общий чат</h3>
 					<div id="chat_window">
-
+						<div class="panel panel-default">
+							<div class="panel-footer">
+								<div class="form-inline">
+									<textarea type="text" class="form-control" id="chat_textarea" placeholder="Ваше сообщение..." disabled></textarea>
+									<button class="btn btn-primary" id="chat_send_btn" disabled>Отправить</button>
+								</div>
+								<div class="msg_container_base">
+									<ul class="list-group" id="chat_messages"></ul>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

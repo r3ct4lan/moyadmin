@@ -32,8 +32,9 @@ $(document).ready(function() {
 	
 	socket.emit("getChat", idCookie);
 	socket.on("setChat", (chat) => {
-		$('.panel').remove();
-		$('#chat_window').append('<div class="panel panel-default"><div class="panel-footer"><div class="form-inline"><textarea type="text" class="form-control" id="chat_textarea" placeholder="Ваше сообщение..."></textarea><button class="btn btn-primary" id="chat_send_btn">Отправить</button></div><div class="msg_container_base"><ul class="list-group" id="chat_messages"></ul></div></div></div>')
+		$('#chat_messages > li').remove();
+		$('#chat_window > #chat_send_btn').removeAttr('disabled');
+		$('#chat_window > #chat_textarea').removeAttr('disabled');
 		for (var i = chat.messages.length-1; i >= 0; i--) {
 			$('#chat_messages').append('<li class="list-group-item"><small>'+convertDate(chat.messages[i].date)+'</small><b>'+chat.messages[i].sender+'</b><p>'+chat.messages[i].text+'</p></li>');
 		}
