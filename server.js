@@ -191,6 +191,10 @@ app.post('/', (req, res) => {
 				console.log("Redis error: " + err);
 			}
 		});
+	} else {
+		var page = fs.readFileSync('public/login.html');
+	   	res.writeHead(200, {'Content-Type': 'text/html'});
+		res.end(page);
 	}
 });
 
