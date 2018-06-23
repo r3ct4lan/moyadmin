@@ -48,6 +48,7 @@ $(document).ready(function() {
 					"text": $('#chat_textarea').val()
 				}
 				socket.emit('newMessage', newMessage, idCookie);
+				$('#chat_textarea').val('');
 			}
 		}
 	});

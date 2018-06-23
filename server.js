@@ -152,44 +152,46 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
-	client.get("users", function(err, result) {
-		if (result) {
-			result = JSON.parse(result);
-			for (var i = 0; i<result.users.length; i++) {
-				if (result.users[i].login == username && result.users[i].password == password) {
-					var newId = randomstring.generate(23);
-					var page = fs.readFileSync('public/homepage.html');
-					res.cookie("moydvgups_admin_id", newId);
-					res.cookie("username", username);
-   					res.writeHead(200, {'Content-Type': 'text/html'});
-					res.end(page);
-					client.get("active_id", function(err, result) {
-						if (result) {
-							result = JSON.parse(result);
-							var j = 0;
-							if (result.active_id.length) {
-								do {
-									if (Date.now() - result.active_id[j].date > 60000) {
-										result.active_id.splice(j, 1);
-										j--;
-									}
-									j++;
-								} while (j<result.active_id.length);
+	if (username && password) {
+		client.get("users", function(err, result) {
+			if (result) {
+				result = JSON.parse(result);
+				for (var i = 0; i<result.users.length; i++) {
+					if (result.users[i].login == username && result.users[i].password == password) {
+						var newId = randomstring.generate(23);
+						var page = fs.readFileSync('public/homepage.html');
+						res.cookie("moydvgups_admin_id", newId);
+						res.cookie("username", username);
+	   					res.writeHead(200, {'Content-Type': 'text/html'});
+						res.end(page);
+						client.get("active_id", function(err, result) {
+							if (result) {
+								result = JSON.parse(result);
+								var j = 0;
+								if (result.active_id.length) {
+									do {
+										if (Date.now() - result.active_id[j].date > 60000) {
+											result.active_id.splice(j, 1);
+											j--;
+										}
+										j++;
+									} while (j<result.active_id.length);
+								}
+								result.active_id[result.active_id.length] = { "id": newId, "date": Date.now() };
+								result = JSON.stringify(result);
+								client.set("active_id", result);
+							} else {
+								console.log("Redis error: " + err);
 							}
-							result.active_id[result.active_id.length] = { "id": newId, "date": Date.now() };
-							result = JSON.stringify(result);
-							client.set("active_id", result);
-						} else {
-							console.log("Redis error: " + err);
-						}
-					});
-					break;
+						});
+						break;
+					}
 				}
+			} else {
+				console.log("Redis error: " + err);
 			}
-		} else {
-			console.log("Redis error: " + err);
-		}
-	});
+		});
+	}
 });
 
 function checkUser (request, callback) {
