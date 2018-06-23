@@ -31,7 +31,6 @@ $(document).ready(function() {
 	}
 	
 	socket.emit("getChat", idCookie);
-	console.log("getting_chat");
 
 	socket.on("setChat", (chat) => {
 		console.log("setting_chat");

@@ -141,6 +141,7 @@ module.exports = function (server, db) {
 		socket.on("getChat", userId => {
 			checkUserId(userId, temp => {
 				if (temp) {
+					console.log("getChat");
 					db.get("chat", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
