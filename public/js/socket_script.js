@@ -11,6 +11,9 @@ $(document).ready(function() {
 	socket.emit('getUserInfo', idCookie);
 	socket.on('setUserInfo', (result, userId) => {
 		if (userId == idCookie) {
+			$('#main_loader_gif').remove();
+			$('.mainContainer').css('display', 'block');
+			$('footer').css('display', 'block');
 			var uName = result.username;
 			var adminStat = result.adminStatus;
 			if(adminStat) {

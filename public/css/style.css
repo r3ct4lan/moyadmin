@@ -23,6 +23,7 @@ header {
 .mainContainer {
     min-height: 100%;
     position: relative;
+    display: none;
 }
 
 footer {
@@ -30,6 +31,15 @@ footer {
     margin-top: -56px;
     position: relative;
     background: #ccc;
+    display: none;
+}
+
+#main_loader_gif {
+    width: 16%;
+    margin-left: 42%;
+    margin-right: 42%;
+    margin-top: 10rem;
+}
 }
 
 .login-form {
