@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>Profile</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel='stylesheet' href='css/style.css'>
+	<script src="js/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/socket.io.js"></script>
+	<script src="js/profile_script.js"></script>
+	<script src="js/socket_script.js"></script>
+</head>
+<body>
+	<main class="mainContainer">
+		<div class='container'>
+			<div class='row'>
+				<div class="col-md-12">
+					<h3>Личный кабинет</h3>
+					<hr>
+					<p id="username"><strong>Имя пользователя: </strong></p>
+					<p id="admStatus"><strong>Статус пользователя: </strong></p>
+					<hr>
+					<p><a data-toggle="modal" data-target="#ch_username" href="#">Изменить имя пользователя</a></p>
+					<p><a data-toggle="modal" data-target="#ch_password" href="#">Изменить пароль</a></p>
+					<p><a data-toggle="modal" data-target="#delete_user" href="#">Удалить аккаунт</a></p>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<div class="modal fade" id="ch_username" tabindex="-1" role="dialog" aria-labelledby="ch_username" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ch_username">Изменить имя пользователя</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="newUName">Новое имя пользователя</label>
+							<input type="text" class="form-control" id="newUName" placeholder="Введите новое имя">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+					<button type="button" class="btn btn-primary">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="ch_password" tabindex="-1" role="dialog" aria-labelledby="ch_password" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ch_password">Изменить пароль</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="/chngpsswrd" method="post">
+						<div class="form-group">
+							<label for="oldPass">Старый пароль</label>
+							<input type="password" class="form-control" id="oldPass" placeholder="Введите свой пароль">
+						</div>
+						<div class="form-group">
+							<label for="newPass1">Новый пароль</label>
+							<input type="password" class="form-control" id="newPass1" placeholder="Введите новый пароль">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+					<button type="button" class="btn btn-primary">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

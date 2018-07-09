@@ -5,8 +5,74 @@ const ftp_config = require('../../config/ftp.js');
 module.exports = function (server, db) {
 	const io = require('socket.io')(server);
 	io.on('connection', socket => {
+		socket.on('getUserInfo', userId => {
+			checkUserId(userId, temp => {
+				if (temp) {
+					db.get("sys_active_id", (err, result) => {
+						if (result) {
+							result = JSON.parse(result);
+							for (var i = 0; i < result.active_id.length; i++) {
+								if (result.active_id[i].id == userId) {
+									var answer = {
+										"username": result.active_id[i].username,
+										"adminStatus": result.active_id[i].adminStatus
+									};
+									break;
+								}
+							}
+							if (answer) {
+								socket.emit('setUserInfo', answer, userId);
+							}
+						} else {
+							console.log("Redis error: " + err);
+						}
+					});
+				}
+			});
+		});
+
+		socket.on('changeUserName', (newUName, userId) => {
+			checkUserId(userId, temp => {
+				if (temp) {
+					db.get("sys_active_id", (err, result) => {
+						if (result) {
+							result = JSON.parse(result);
+							var flag = false;
+							for (var i = 0; i < result.active_id.length; i++) {
+								if (result.active_id[i].id == userId) {
+									var oldUName = result.active_id[i].username;
+									db.get("sys_users", (err, result2) => {
+										if (result2) {
+											result2 = JSON.parse(result2);
+											for (var j = 0; j < result2.users.length; j++) {
+												if (result2.users[j].login == oldUName) {
+													flag = true;
+													result2.users[j].login = newUName;
+													result2 = JSON.stringify(result2);
+													db.set("sys_users", result2);
+													result.active_id[i].username = newUName;
+													result = JSON.stringify(result);
+													db.set("sys_active_id", result);
+													socket.emit("profileSuccess", userId);
+													break;
+												}
+											}
+											if (!flag) socket.emit("profileError", userId);
+										}
+									});
+									break;
+								}
+							}
+						} else {
+							console.log("Redis error: " + err);
+						}
+					});
+				}
+			});
+		});
+
 		socket.on("userExit", userId => {
-			db.get("active_id", (err, result) => {
+			db.get("sys_active_id", (err, result) => {
 				if (result) {
 					result = JSON.parse(result);
 					var i = 0;
@@ -18,7 +84,7 @@ module.exports = function (server, db) {
 						i++;
 					} while (i < result.active_id.length);
 					result = JSON.stringify(result);
-					db.set("active_id", result);
+					db.set("sys_active_id", result);
 				} else {
 					console.log("Redis error: " + err);
 				}
@@ -27,8 +93,8 @@ module.exports = function (server, db) {
 		socket.on("getAll", userId => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("menu_structure", (err, struct) => {
-						db.get("colors", (err, color) => {
+					db.get("sys_menu_structure", (err, struct) => {
+						db.get("sys_colors", (err, color) => {
 							if (struct && color) {
 								struct = JSON.parse(struct);
 								color = JSON.parse(color);
@@ -46,7 +112,7 @@ module.exports = function (server, db) {
 			checkUserId(userId, temp => {
 				if (temp) {
 					json = JSON.stringify(json);
-					db.set("menu_structure", json);
+					db.set("sys_menu_structure", json);
 				}
 			});
 		});
@@ -54,14 +120,14 @@ module.exports = function (server, db) {
 			checkUserId(userId, temp => {
 				if (temp) {
 					json = JSON.stringify(json);
-					db.set("colors", json);
+					db.set("sys_colors", json);
 				}
 			});
 		});
 		socket.on("getUnpublic", userId => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("unpublic", (err, struct) => {	
+					db.get("sys_unpublic", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
 							socket.emit("setUnpublic", struct, userId);
@@ -76,14 +142,14 @@ module.exports = function (server, db) {
 		socket.on("addUnpublicContent", (unpublicContent, userId) => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("unpublic", (err, json) => {
+					db.get("sys_unpublic", (err, json) => {
 						if (json) {
 							json = JSON.parse(json);
 							for (var i = 0; i < unpublicContent.length; i++) {
 								json.push(unpublicContent[i]);
 							}
 							json = JSON.stringify(json);
-							db.set("unpublic", json);
+							db.set("sys_unpublic", json);
 						}
 						else {
 							console.log("Redis error: " + err);
@@ -96,7 +162,7 @@ module.exports = function (server, db) {
 			checkUserId(userId, temp => {
 				if (temp) {
 					unpublic = JSON.stringify(unpublic);
-					db.set("unpublic", unpublic);
+					db.set("sys_unpublic", unpublic);
 				}
 			});
 		});
@@ -104,7 +170,7 @@ module.exports = function (server, db) {
 		socket.on("getLastEvents", userId => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("events", (err, struct) => {	
+					db.get("sys_events", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
 							socket.emit("setLastEvents", struct, userId);
@@ -119,7 +185,7 @@ module.exports = function (server, db) {
 		socket.on("updateEvents", (newEvent, userId) => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("events", (err, struct) => {	
+					db.get("sys_events", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
 							if (struct.events.length > 14) {
@@ -128,7 +194,7 @@ module.exports = function (server, db) {
 							}
 							struct.events.push(newEvent);
 							struct = JSON.stringify(struct);
-							db.set("events", struct);
+							db.set("sys_events", struct);
 						}
 						else {
 							console.log("Redis error: " + err);
@@ -141,7 +207,7 @@ module.exports = function (server, db) {
 		socket.on("getChat", userId => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("chat", (err, struct) => {	
+					db.get("sys_chat", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
 							socket.emit("setChat", struct);
@@ -157,7 +223,7 @@ module.exports = function (server, db) {
 		socket.on('newMessage', (newMessage, userId) => {
 			checkUserId(userId, temp => {
 				if (temp) {
-					db.get("chat", (err, struct) => {	
+					db.get("sys_chat", (err, struct) => {	
 						if (struct) {
 							struct = JSON.parse(struct);
 							if (struct.messages.length > 29) {
@@ -167,7 +233,7 @@ module.exports = function (server, db) {
 							struct.messages.push(newMessage);
 							socket.emit("setChat", struct);
 							struct = JSON.stringify(struct);
-							db.set("chat", struct);
+							db.set("sys_chat", struct);
 						}
 						else {
 							console.log("Redis error: " + err);
@@ -289,67 +355,84 @@ module.exports = function (server, db) {
 							console.log("Redis error: " + err);
 						}
 					});
+}
+});
+});
+
+socket.on('updateArticleContent', (page, userId) => {
+	checkUserId(userId, temp => {
+		if (temp) {
+			db.get(page.alias, (err, struct) => {
+				if (struct) {
+					struct = JSON.parse(struct);
+					struct.content = page.content;
+					struct = JSON.stringify(struct);
+					db.set(page.alias, struct);
+				} else {
+					console.log("Redis error: " + err);
 				}
 			});
-		});
+		}
+	});
+});
 
-		socket.on("deleteArticle", (article, userId) => {
-			checkUserId(userId, temp => {
-				if (temp) {
-					db.del(article);
-					var ftp = new ftpClient();
-					ftp.connect(ftp_config);
-					ftp.on('ready', () => {
-						ftp.delete('./moydvgups.ru/www/'+article+'.html', err => {
-							if (err) console.log(err);
-							ftp.end();
+socket.on("deleteArticle", (article, userId) => {
+	checkUserId(userId, temp => {
+		if (temp) {
+			db.del(article);
+			var ftp = new ftpClient();
+			ftp.connect(ftp_config);
+			ftp.on('ready', () => {
+				ftp.delete('./moydvgups.ru/www/'+article+'.html', err => {
+					if (err) console.log(err);
+					ftp.end();
+				});
+			});
+		}
+	});
+});
+
+socket.on("getArticle", (article, userId) => {
+	checkUserId(userId, temp => {
+		if (temp) {
+			db.get(article, (err, struct) => {
+				if (struct) {
+					db.get("sys_menu_structure", (err, menu) => {
+						db.get("sys_colors", (err, color) => {
+							if (menu && color) {
+								menu = JSON.parse(menu);
+								struct = JSON.parse(struct);
+								color = JSON.parse(color);
+								socket.emit("setArticle", struct, menu, color, userId);
+							} else {
+								console.log("Redis error: " + err);
+							}
 						});
 					});
+				} else {
+					socket.emit("setArticle", null, null, null, userId);
 				}
 			});
-		});
-
-		socket.on("getArticle", (article, userId) => {
-			checkUserId(userId, temp => {
-				if (temp) {
-					db.get(article, (err, struct) => {
-						if (struct) {
-							db.get("menu_structure", (err, menu) => {
-								db.get("colors", (err, color) => {
-									if (menu && color) {
-										menu = JSON.parse(menu);
-										struct = JSON.parse(struct);
-										color = JSON.parse(color);
-										socket.emit("setArticle", struct, menu, color, userId);
-									} else {
-										console.log("Redis error: " + err);
-									}
-								});
-							});
-						} else {
-							socket.emit("setArticle", null, null, null, userId);
-						}
-					});
-				}
-			});
-		});
+		}
 	});
+});
+});
 
-	function checkUserId(userId, callback) {
-		var temp = false;
-		db.get("active_id", function(err, result) {
-			if (result) {
-				result = JSON.parse(result);
-				for (var j = 0; j<result.active_id.length; j++) {
-					if (result.active_id[j].id == userId) {
-						temp = true;
-						break;
-					}
+function checkUserId(userId, callback) {
+	var temp = false;
+	db.get("sys_active_id", function(err, result) {
+		if (result) {
+			result = JSON.parse(result);
+			for (var j = 0; j<result.active_id.length; j++) {
+				if (result.active_id[j].id == userId) {
+					temp = true;
+					break;
 				}
-				callback(temp);
-			} else {
-				console.log("Redis error: " + err);
 			}
-		});
-	}
+			callback(temp);
+		} else {
+			console.log("Redis error: " + err);
+		}
+	});
+}
 };

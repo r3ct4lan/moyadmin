@@ -54,7 +54,7 @@ $(document).ready(function() {
 									validCheck = false;
 									break;
 								}
-								if ($("#article-alias").val() == structure.sections[i].content[j].linkAddress.substr(0, structure.sections[i].content[j].linkAddress.lastIndexOf('.')) && validCheck) {
+								if ($("#article-alias").val() == structure.sections[i].content[j].linkAddress && validCheck) {
 									alert('Статья с таким псевдонимом уже существует.');
 									$("#article-alias").attr('class', 'form-control is-invalid');
 									validCheck = false;
@@ -63,9 +63,9 @@ $(document).ready(function() {
 							}
 						}
 						if (!validCheck || !$('div').is('.preview-image-icon') || !$('div').is('.preview-image-backgr')) {
-							alert("Заполните все поля!");
+							alert("Вы неправильно заполнили форму!");
 						} else {
-							structure.sections[$('#article-section').val()].content.push({linkName: $('#article-title').val(), linkAddress: $('#article-alias').val() + '.html', linkType: "article" });
+							structure.sections[$('#article-section').val()].content.push({linkName: $('#article-title').val(), linkAddress: $('#article-alias').val(), linkType: "article" });
 							var newArticle = { 
 								"alias": $('#article-alias').val(),
 								"title": $('#article-title').val(),
@@ -129,7 +129,7 @@ $(document).ready(function() {
 									validCheck = false;
 									break;
 								}
-								if ($("#article-link").val() == structure.sections[i].content[j].linkAddress.substr(0, structure.sections[i].content[j].linkAddress.lastIndexOf('.')) && validCheck) {
+								if ($("#article-link").val() == structure.sections[i].content[j].linkAddress && validCheck) {
 									alert('Ссылка с таким адресом уже существует.');
 									$("#article-link").attr('class', 'form-control is-invalid');
 									validCheck = false;
@@ -153,13 +153,7 @@ $(document).ready(function() {
 				}
 			} else if (pageType == "titles") {
 				var parametrs = parseParametrs(window.location.search.match(/\&(.*)/)[1]);
-				var artNum;
-				for (var i = 0; i < structure.sections[parametrs.secNum].content.length; i++) {
-					if ( structure.sections[parametrs.secNum].content[i].linkAddress == parametrs.artAddr ) {
-						artNum = i;
-					}
-				}
-				socket.emit("getArticle", structure.sections[parametrs.secNum].content[artNum].linkAddress.replace('.html',''), idCookie);
+				socket.emit("getArticle", structure.sections[parametrs.secNum].content[parametrs.artNum].linkAddress, idCookie);
 				socket.on("setArticle", (article_json, dontUse, dotnUse, userId) => {
 					if (userId == idCookie) {
 						if (parametrs.type == "article") {
@@ -171,9 +165,9 @@ $(document).ready(function() {
 						}
 					}
 					function switch_to_articleType() {
-						var oldArtAlias = structure.sections[parametrs.secNum].content[artNum].linkAddress.substr(0, structure.sections[parametrs.secNum].content[artNum].linkAddress.lastIndexOf('.'));
+						var oldArtAlias = structure.sections[parametrs.secNum].content[parametrs.artNum].linkAddress.substr(0, structure.sections[parametrs.secNum].content[parametrs.artNum].linkAddress.lastIndexOf('.'));
 						$('#edit_link_form').remove();
-						$("#article_edit").append('<form id="edit_article_form"><h1>Изменить статью<button type="button" id="switch_to_linkType" class="btn btn-link">Изменить на ссылку</button></h1><div class="form-group"><label for="article-title">Заголовок</label><input type="text" class="form-control" id="article-title" aria-describedby="titleHelp"><small id="titleHelp" class="form-text text-muted">Под выбранным заголовком статья будет размещена в одной из "плиток" на главной странице.</small></div><div class="form-group"><label for="article-alias">Псевдоним</label><input type="text" class="form-control" id="article-alias" aria-describedby="aliasHelp"><small id="aliasHelp" class="form-text text-muted">Псевдоним статьи должен состоять из букв английского алфавита и цифр без пробелов и знаков препинания.</small></div><div class="form-group"><label for="article-section">Раздел</label><select class="form-control" id="article-section" aria-describedby="sectionHelp"></select><small id="sectionHelp" class="form-text text-muted">Статья будет размещена в выбранном разделе.</small></div><div class="form-group" id="article_icon"><btn class="btn btn-info" data-toggle="modal" data-target="#article-icon">Изменить иконку</btn></div><div class="form-group" id="article_backgr"><btn class="btn btn-info" data-toggle="modal" data-target="#article-backgr">Изменить фоновое изображение</btn></div><div class="modal-footer"><button type="button" class="btn btn-secondary">Отмена</button><button type="button" class="btn btn-primary">Сохранить</button></div></form>');
+						$("#article_edit").append('<form id="edit_article_form"><h1>Изменить статью<button type="button" id="switch_to_linkType" class="btn btn-link">Изменить на ссылку</button></h1><div class="form-group"><label for="article-title">Заголовок</label><input type="text" class="form-control" id="article-title" aria-describedby="titleHelp"><small id="titleHelp" class="form-text text-muted">Под выбранным заголовком статья будет размещена в одной из "плиток" на главной странице.</small></div><div class="form-group"><label for="article-alias">Псевдоним</label><input type="text" class="form-control" id="article-alias" aria-describedby="aliasHelp"><small id="aliasHelp" class="form-text text-muted">Псевдоним статьи должен состоять из букв английского алфавита и цифр без пробелов и знаков препинания.</small></div><div class="form-group"><label for="article-section">Раздел</label><select class="form-control" id="article-section" aria-describedby="sectionHelp"></select><small id="sectionHelp" class="form-text text-muted">Статья будет размещена в выбранном разделе.</small></div><div class="form-group" id="edit_content"><btn class="btn btn-warning">Изменить содержимое</btn></div><div class="form-group" id="article_icon"><btn class="btn btn-info" data-toggle="modal" data-target="#article-icon">Изменить иконку</btn></div><div class="form-group" id="article_backgr"><btn class="btn btn-info" data-toggle="modal" data-target="#article-backgr">Изменить фоновое изображение</btn></div><div class="modal-footer"><button type="button" class="btn btn-secondary">Отмена</button><button type="button" class="btn btn-primary">Сохранить</button></div></form>');
 						for (var i = 0; i < structure.sections.length; i++) {
 							if (i == parametrs.secNum) {
 								$('select#article-section').append('<option selected value='+i+'>'+structure.sections[i].title+'</option>');
@@ -182,7 +176,7 @@ $(document).ready(function() {
 							}
 						}
 
-						$('#article-title').val(structure.sections[parametrs.secNum].content[artNum].linkName);
+						$('#article-title').val(structure.sections[parametrs.secNum].content[parametrs.artNum].linkName);
 						if (article_json) {
 							$("#article-alias").val(article_json.alias);
 							$("#article_icon").append('<div class="preview-image-icon"><img src="http://moydvgups.ru'+article_json.icon+'" data-path="'+article_json.icon+'"></div>');
@@ -213,13 +207,13 @@ $(document).ready(function() {
 							var validCheck = true;
 							for (var i = 0; i < structure.sections.length; i++) {
 								for (var j = 0; j < structure.sections[i].content.length; j++) {
-									if ($("#article-title").val() == structure.sections[i].content[j].linkName && $("#article-title").val() != structure.sections[parametrs.secNum].content[artNum].linkName) {
+									if ($("#article-title").val() == structure.sections[i].content[j].linkName && $("#article-title").val() != structure.sections[parametrs.secNum].content[parametrs.artNum].linkName) {
 										alert('Статья или ссылка с таким именем уже существует.');
 										$("#article-title").attr('class', 'form-control is-invalid');
 										validCheck = false;
 										break;
 									}
-									if ($("#article-alias").val() == structure.sections[i].content[j].linkAddress.substr(0, structure.sections[i].content[j].linkAddress.lastIndexOf('.')) && $("#article-alias").val() != oldArtAlias && validCheck) {
+									if ($("#article-alias").val() == structure.sections[i].content[j].linkAddress && $("#article-alias").val() != oldArtAlias && validCheck) {
 										alert('Статья с таким псевдонимом уже существует.');
 										$("#article-alias").attr('class', 'form-control is-invalid');
 										validCheck = false;
@@ -228,15 +222,15 @@ $(document).ready(function() {
 								}
 							}
 							if (!validCheck || !$('div').is('.preview-image-icon') || !$('div').is('.preview-image-backgr')) {
-								alert("Заполните все поля!");
+								alert("Вы неправильно заполнили форму!");
 							} else {
 								if(parametrs.secNum == $('#article-section').val()) {
-									structure.sections[parametrs.secNum].content[artNum].linkName = $('#article-title').val();
-									structure.sections[parametrs.secNum].content[artNum].linkAddress = $('#article-alias').val() + '.html';
-									structure.sections[parametrs.secNum].content[artNum].linkType = "article";
+									structure.sections[parametrs.secNum].content[parametrs.artNum].linkName = $('#article-title').val();
+									structure.sections[parametrs.secNum].content[parametrs.artNum].linkAddress = $('#article-alias').val();
+									structure.sections[parametrs.secNum].content[parametrs.artNum].linkType = "article";
 								} else {
-									structure.sections[parametrs.secNum].content.splice(artNum, 1);
-									structure.sections[$('#article-section').val()].content.push({linkName: $('#article-title').val(), linkAddress: $('#article-alias').val() + '.html', linkType: "article" });
+									structure.sections[parametrs.secNum].content.splice(parametrs.artNum, 1);
+									structure.sections[$('#article-section').val()].content.push({linkName: $('#article-title').val(), linkAddress: $('#article-alias').val(), linkType: "article" });
 								}
 								var currArticle = { 
 									"alias": $('#article-alias').val(),
@@ -263,6 +257,10 @@ $(document).ready(function() {
 
 						$('#edit_article_form .btn-secondary').click(() => {
 							window.location.replace("/section?"+parametrs.secNum);
+						});
+
+						$('#edit_content').click(() => {
+							window.location.replace("/edit?page&pageAlias="+structure.sections[parametrs.secNum].content[parametrs.artNum].linkAddress);
 						});
 					}
 
@@ -347,8 +345,9 @@ $(document).ready(function() {
 	socket.emit("getUnpublic", idCookie);
 	socket.on("setUnpublic", (unpublic, userId) => {
 		var parametrs = parseParametrs(window.location.search.match(/\&(.*)/)[1]);
-		socket.emit("getArticle", unpublic[parametrs.num].linkAddress.replace('.html',''), idCookie);
+		socket.emit("getArticle", unpublic[parametrs.num].linkAddress, idCookie);
 		socket.on("setArticle", (article_json, dontUse, dotnUse, userId) => {
+			console.log(article_json);
 			if (userId == idCookie) {
 				if (parametrs.type == "article") {
 					switch_to_articleType();
@@ -361,7 +360,7 @@ $(document).ready(function() {
 			function switch_to_articleType() {
 				var oldArtAlias = unpublic[parametrs.num].linkAddress.substr(0, unpublic[parametrs.num].linkAddress.lastIndexOf('.'));
 				$('#edit_link_form').remove();
-				$("#article_edit").append('<form id="edit_article_form"><h1>Изменить статью<button type="button" id="switch_to_linkType" class="btn btn-link">Изменить на ссылку</button></h1><div class="form-group"><label for="article-title">Заголовок</label><input type="text" class="form-control" id="article-title" aria-describedby="titleHelp"><small id="titleHelp" class="form-text text-muted">Под выбранным заголовком статья будет размещена в одной из "плиток" на главной странице.</small></div><div class="form-group"><label for="article-alias">Псевдоним</label><input type="text" class="form-control" id="article-alias" aria-describedby="aliasHelp"><small id="aliasHelp" class="form-text text-muted">Псевдоним статьи должен состоять из букв английского алфавита и цифр без пробелов и знаков препинания.</small></div><div class="form-group"><label for="article-section">Раздел</label><select class="form-control" id="article-section" aria-describedby="sectionHelp"></select><small id="sectionHelp" class="form-text text-muted">Статья будет размещена в выбранном разделе.</small></div><div class="form-group" id="article_icon"><btn class="btn btn-info" data-toggle="modal" data-target="#article-icon">Изменить иконку</btn></div><div class="form-group" id="article_backgr"><btn class="btn btn-info" data-toggle="modal" data-target="#article-backgr">Изменить фоновое изображение</btn></div><div class="modal-footer"><button type="button" class="btn btn-secondary">Отмена</button><button type="button" class="btn btn-primary">Опубликовать</button></div></form>');
+				$("#article_edit").append('<form id="edit_article_form"><h1>Изменить статью<button type="button" id="switch_to_linkType" class="btn btn-link">Изменить на ссылку</button></h1><div class="form-group"><label for="article-title">Заголовок</label><input type="text" class="form-control" id="article-title" aria-describedby="titleHelp"><small id="titleHelp" class="form-text text-muted">Под выбранным заголовком статья будет размещена в одной из "плиток" на главной странице.</small></div><div class="form-group"><label for="article-alias">Псевдоним</label><input type="text" class="form-control" id="article-alias" aria-describedby="aliasHelp"><small id="aliasHelp" class="form-text text-muted">Псевдоним статьи должен состоять из букв английского алфавита и цифр без пробелов и знаков препинания.</small></div><div class="form-group"><label for="article-section">Раздел</label><select class="form-control" id="article-section" aria-describedby="sectionHelp"></select><small id="sectionHelp" class="form-text text-muted">Статья будет размещена в выбранном разделе.</small></div><div class="form-group" id="edit_content"><btn class="btn btn-warning">Изменить содержимое</btn></div><div class="form-group" id="article_icon"><btn class="btn btn-info" data-toggle="modal" data-target="#article-icon">Изменить иконку</btn></div><div class="form-group" id="article_backgr"><btn class="btn btn-info" data-toggle="modal" data-target="#article-backgr">Изменить фоновое изображение</btn></div><div class="modal-footer"><button type="button" class="btn btn-secondary">Отмена</button><button type="button" class="btn btn-primary">Опубликовать</button></div></form>');
 				for (var i = 0; i < structure.sections.length; i++) {
 					$('select#article-section').append('<option value='+i+'>'+structure.sections[i].title+'</option>');
 				}
@@ -412,10 +411,10 @@ $(document).ready(function() {
 						}
 					}
 					if (!validCheck || !$('div').is('.preview-image-icon') || !$('div').is('.preview-image-backgr')) {
-						alert("Заполните все поля!");
+						alert("Вы неправильно заполнили форму!");
 					} else {
 						unpublic.splice(parametrs.num, 1);
-						structure.sections[$('#article-section').val()].content.push({linkName: $('#article-title').val(), linkAddress: $('#article-alias').val() + '.html', linkType: "article" });
+						structure.sections[$('#article-section').val()].content.push({linkName: $('#article-title').val(), linkAddress: $('#article-alias').val(), linkType: "article" });
 						var currArticle = { 
 							"alias": $('#article-alias').val(),
 							"title": $('#article-title').val(),
@@ -434,14 +433,19 @@ $(document).ready(function() {
 						socket.emit("updateArticleTitle", oldArtAlias ,currArticle, structure, idCookie);
 						socket.on('newArticleIsReady', (filename, userId) => {
 							if (userId == idCookie) {
-								window.location.replace("/homepage");
+								window.location.replace("/");
 							}
 						});
 					}
 				});
 
 				$('#edit_article_form .btn-secondary').click(() => {
-					window.location.replace("/homepage");
+					window.location.replace("/");
+				});
+
+				$('#edit_content').click(() => {
+					if (article_json) window.location.replace("/edit?page&pageAlias="+article_json.alias);
+					else alert("Данная статья ещё не создана.")
 				});
 			}
 
@@ -504,12 +508,12 @@ $(document).ready(function() {
 							"text": "<b>"+uName+"</b> опубликовал ссылку <b>"+$('#article-title').val()+"</b>"
 						}
 						socket.emit("updateEvents", newEvent, idCookie);
-						window.location.replace("/homepage");
+						window.location.replace("/");
 					}
 				});
 
 				$('#edit_link_form .btn-secondary').click(() => {
-					window.location.replace("/homepage");
+					window.location.replace("/");
 				});
 			}
 		});

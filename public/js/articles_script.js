@@ -18,7 +18,7 @@ $(document).ready(function() {
 				if (struct[i].linkType == "link") {
 					$('#articles-unpublic').append('<a class="list-group-item list-group-item-action" href="/titles?unpublic&type=link&num='+i+'">'+struct[i].linkName+' (ссылка)</li>');
 				} else if (struct[i].linkType == "article") {
-					$('#articles-unpublic').append('<a class="list-group-item list-group-item-action" href="/titles?unpublic&type=link&num='+i+'">'+struct[i].linkName+' (статья)</li>');
+					$('#articles-unpublic').append('<a class="list-group-item list-group-item-action" href="/titles?unpublic&type=article&num='+i+'">'+struct[i].linkName+' (статья)</li>');
 				}
 			}
 		}
@@ -30,9 +30,9 @@ $(document).ready(function() {
 			for (var i = 0; i<structure.sections.length; i++) {
 				for (var j = 0; j < structure.sections[i].content.length; j++) {
 					if (structure.sections[i].content[j].linkType == "link") {
-						$('#articles-all').append('<a class="list-group-item list-group-item-action" href="/titles?titles&type=link&secNum='+i+'">'+structure.sections[i].content[j].linkName+' (ссылка)</li>');
+						$('#articles-all').append('<a class="list-group-item list-group-item-action" href="/titles?titles&type=link&secNum='+i+'&artNum='+j+'">'+structure.sections[i].content[j].linkName+' (ссылка)</li>');
 					} else if (structure.sections[i].content[j].linkType == "article") {
-						$('#articles-all').append('<a class="list-group-item list-group-item-action" href="/edit?page&pageAlias='+structure.sections[i].content[j].linkAddress.replace('.html', '')+'">'+structure.sections[i].content[j].linkName+' (статья)</li>');
+						$('#articles-all').append('<a class="list-group-item list-group-item-action" href="/titles?titles&type=article&secNum='+i+'&artNum='+j+'">'+structure.sections[i].content[j].linkName+' (статья)</li>');
 					}
 				}
 			}
