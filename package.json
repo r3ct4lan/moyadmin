@@ -35,7 +35,7 @@
     "https": "^1.0.0",
     "password-hash": "^1.2.2",
     "randomstring": "^1.1.5",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "socket.io": "^2.1.0",
     "url": "^0.11.0"
   },
